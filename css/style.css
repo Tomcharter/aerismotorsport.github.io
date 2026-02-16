@@ -262,6 +262,7 @@ main {
   .nav-links a {
     padding: 0.75rem 1rem;
     font-size: 1rem;
+    color: var(--color-text);
   }
 }
 

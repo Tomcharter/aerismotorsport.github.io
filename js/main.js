@@ -60,6 +60,16 @@ function buildNav() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
   });
+
+  // Close menu when a nav link is tapped (mobile)
+  links.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.classList.remove('open');
+      links.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 }
 
 /* --- Footer --- */

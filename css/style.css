@@ -1289,6 +1289,23 @@ main {
   margin-top: 1.25rem;
 }
 
+/* --- Publish Bar --- */
+.admin-publish {
+  border-color: var(--color-accent);
+}
+
+.admin-publish:hover {
+  transform: none;
+}
+
+.admin-publish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
   .admin-tabs {
     overflow-x: auto;

@@ -79,6 +79,30 @@
         </div>
       </div>
     </section>
+
+    <!-- Publish Bar -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="admin-publish card">
+          <div class="admin-publish-header">
+            <div>
+              <h3>Publish to Live Site</h3>
+              <p class="text-secondary" style="font-size:0.9rem;">Push your changes to GitHub. The site redeploys automatically.</p>
+            </div>
+            <button class="btn btn-primary" onclick="publishAll()" id="publish-btn">Publish Changes</button>
+          </div>
+          <div class="form-group mt-2">
+            <label>GitHub Token</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" style="flex:1;">
+              <button class="btn-sm btn-edit" onclick="saveToken()">Save</button>
+            </div>
+            <p class="text-secondary" style="font-size:0.8rem;margin-top:0.35rem;">Your token is stored locally and never sent anywhere except GitHub's API.</p>
+          </div>
+          <div id="publish-status" style="margin-top:0.75rem;"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer" style="display:none;"></footer>
@@ -726,7 +750,99 @@
       renderResults();
       renderCurrentChampionships();
       renderPastWins();
+
+      // Restore saved token
+      const savedToken = localStorage.getItem('gh-token');
+      if (savedToken) {
+        document.getElementById('gh-token').value = savedToken;
+      }
     });
+
+    // =============================================
+    //  PUBLISH — GitHub API
+    // =============================================
+
+    const GH_REPO = 'Tomcharter/aerismotorsport.github.io';
+    const GH_API = 'https://api.github.com';
+
+    function saveToken() {
+      const token = document.getElementById('gh-token').value.trim();
+      if (!token) { alert('Please enter a token.'); return; }
+      localStorage.setItem('gh-token', token);
+      showStatus('Token saved.', 'success');
+    }
+
+    function getToken() {
+      return (document.getElementById('gh-token').value.trim()) ||
+             localStorage.getItem('gh-token') || '';
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('publish-status');
+      const color = type === 'success' ? 'var(--color-success)' :
+                    type === 'error' ? 'var(--color-danger)' :
+                    'var(--color-text-secondary)';
+      el.innerHTML = `<p style="color:${color};font-size:0.9rem;">${msg}</p>`;
+    }
+
+    async function pushFile(token, path, content) {
+      // Get current file SHA
+      const getRes = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}`, {
+        headers: { 'Authorization': `token ${token}` }
+      });
+
+      let sha = null;
+      if (getRes.ok) {
+        const fileData = await getRes.json();
+        sha = fileData.sha;
+      }
+
+      // Push updated content
+      const body = {
+        message: `Update ${path} via admin panel`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2) + '\n'))),
+      };
+      if (sha) body.sha = sha;
+
+      const putRes = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!putRes.ok) {
+        const err = await putRes.json();
+        throw new Error(err.message || `Failed to update ${path}`);
+      }
+    }
+
+    async function publishAll() {
+      const token = getToken();
+      if (!token) {
+        showStatus('Please enter your GitHub token first.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('publish-btn');
+      btn.disabled = true;
+      btn.textContent = 'Publishing...';
+      showStatus('Pushing changes to GitHub...', 'info');
+
+      try {
+        await pushFile(token, 'data/drivers.json', driversData);
+        await pushFile(token, 'data/results.json', resultsData);
+        await pushFile(token, 'data/championships.json', championshipsData);
+        showStatus('Published! Site will redeploy in 1–2 minutes.', 'success');
+      } catch (err) {
+        showStatus('Error: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publish Changes';
+      }
+    }
   </script>
 </body>
 </html>

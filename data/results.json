@@ -8,7 +8,10 @@
     "car": "Ferrari 296 GT3",
     "startPos": 12,
     "finishPos": 3,
-    "drivers": ["Alex Morgan", "Sarah Chen"],
+    "drivers": [
+      "Alex Morgan",
+      "Sarah Chen"
+    ],
     "notes": "Strong recovery drive from P12 to podium. Clean pit stops made the difference."
   },
   {
@@ -20,7 +23,10 @@
     "car": "BMW M4 GT3",
     "startPos": 4,
     "finishPos": 2,
-    "drivers": ["James O'Brien", "Marcus Rivera"],
+    "drivers": [
+      "James O'Brien",
+      "Marcus Rivera"
+    ],
     "notes": "James narrowly missed the win after a thrilling battle in the final three laps."
   },
   {
@@ -32,7 +38,11 @@
     "car": "Ferrari 296 GT3",
     "startPos": 6,
     "finishPos": 1,
-    "drivers": ["Alex Morgan", "Sarah Chen", "Marcus Rivera"],
+    "drivers": [
+      "Alex Morgan",
+      "Sarah Chen",
+      "Marcus Rivera"
+    ],
     "notes": "First win of the season! Alex led from lap 42 to the chequered flag."
   },
   {
@@ -44,7 +54,10 @@
     "car": "Porsche 911 GT3 R",
     "startPos": 1,
     "finishPos": 1,
-    "drivers": ["Sarah Chen", "Lena Kowalski"],
+    "drivers": [
+      "Sarah Chen",
+      "Lena Kowalski"
+    ],
     "notes": "Dominant pole-to-flag victory. Lena showed great pace on her team debut stint."
   },
   {
@@ -56,7 +69,10 @@
     "car": "Ferrari 296 GT3",
     "startPos": 5,
     "finishPos": 4,
-    "drivers": ["Alex Morgan", "James O'Brien"],
+    "drivers": [
+      "Alex Morgan",
+      "James O'Brien"
+    ],
     "notes": "Tricky conditions with variable weather. James adapted brilliantly in the wet stints."
   },
   {
@@ -68,7 +84,10 @@
     "car": "BMW M4 GT3",
     "startPos": 3,
     "finishPos": 1,
-    "drivers": ["James O'Brien", "Marcus Rivera"],
+    "drivers": [
+      "James O'Brien",
+      "Marcus Rivera"
+    ],
     "notes": "Season finale victory that clinched the championship for the team."
   },
   {
@@ -80,7 +99,10 @@
     "car": "McLaren 720S GT3 Evo",
     "startPos": 2,
     "finishPos": 2,
-    "drivers": ["Marcus Rivera", "Sarah Chen"],
+    "drivers": [
+      "Marcus Rivera",
+      "Sarah Chen"
+    ],
     "notes": "Strong team effort — the car was consistently in the top three all race."
   },
   {
@@ -92,7 +114,10 @@
     "car": "Ferrari 296 GT3",
     "startPos": 9,
     "finishPos": 2,
-    "drivers": ["Alex Morgan", "Sarah Chen"],
+    "drivers": [
+      "Alex Morgan",
+      "Sarah Chen"
+    ],
     "notes": "Alex's aggressive tyre strategy paid off in the second stint."
   }
 ]

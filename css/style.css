@@ -252,6 +252,7 @@ main {
     gap: 0.25rem;
     transition: right var(--transition);
     box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
   }
 
   .nav-links.open {

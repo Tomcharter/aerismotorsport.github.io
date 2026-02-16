@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results — Aeris Motorsport</title>
+  <meta name="description" content="Race results for Aeris Motorsport across all iRacing series and seasons.">
+  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav"></nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Race <span class="text-accent">Results</span></h1>
+      <p>Our performance across every race, season, and series.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="filters" id="filters">
+          <div class="filter-group">
+            <label for="filter-season">Season</label>
+            <select id="filter-season">
+              <option value="all">All Seasons</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-series">Series</label>
+            <select id="filter-series">
+              <option value="all">All Series</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="results-list" id="results-list">
+          <p class="text-secondary">Loading results...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>

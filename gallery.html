@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Aeris Motorsport</title>
+  <meta name="description" content="Screenshots, car liveries, and race moments from Aeris Motorsport.">
+  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav"></nav>
+
+  <main>
+    <div class="page-header">
+      <h1><span class="text-accent">Gallery</span></h1>
+      <p>Car liveries, race screenshots, and memorable moments.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="gallery-filters">
+          <button class="gallery-filter-btn active" data-filter="all">All</button>
+          <button class="gallery-filter-btn" data-filter="liveries">Car Liveries</button>
+          <button class="gallery-filter-btn" data-filter="screenshots">Race Screenshots</button>
+          <button class="gallery-filter-btn" data-filter="results">Results</button>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid"></div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox-overlay" id="lightbox">
+      <div class="lightbox-content">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div id="lightbox-body"></div>
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    const galleryItems = [
+      { id: 1, category: 'liveries', label: 'Aeris GT3 Livery — Ferrari 296', color: '#1a5c2a' },
+      { id: 2, category: 'liveries', label: 'Aeris GT3 Livery — BMW M4', color: '#1a3a5c' },
+      { id: 3, category: 'liveries', label: 'Aeris GT3 Livery — Porsche 911', color: '#5c1a3a' },
+      { id: 4, category: 'screenshots', label: 'Daytona 24h — Start', color: '#2a2a5c' },
+      { id: 5, category: 'screenshots', label: 'Spa Battle — Eau Rouge', color: '#3a5c1a' },
+      { id: 6, category: 'screenshots', label: 'Suzuka — Victory Lap', color: '#5c4a1a' },
+      { id: 7, category: 'screenshots', label: 'Monza — Slipstream', color: '#1a4a5c' },
+      { id: 8, category: 'results', label: '2024 S4 — GT3 Sprint Championship Win', color: '#4a1a5c' },
+      { id: 9, category: 'results', label: '2024 S2 — Ferrari Challenge Win', color: '#5c1a1a' },
+      { id: 10, category: 'results', label: '2025 S1 — Sebring Race Win', color: '#1a5c4a' },
+      { id: 11, category: 'liveries', label: 'Aeris Endurance Livery — Special Edition', color: '#3a3a1a' },
+      { id: 12, category: 'screenshots', label: 'Road Atlanta — Wet Race', color: '#2a4a3a' },
+    ];
+
+    let activeFilter = 'all';
+
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      const filtered = activeFilter === 'all'
+        ? galleryItems
+        : galleryItems.filter(item => item.category === activeFilter);
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="gallery-item" data-id="${item.id}" style="background: ${item.color};">
+          <div class="placeholder-content">
+            <span class="placeholder-icon">&#128247;</span>
+            <span>${item.label}</span>
+          </div>
+          <div class="gallery-label">${item.label}</div>
+        </div>
+      `).join('');
+
+      // Click handlers
+      grid.querySelectorAll('.gallery-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = parseInt(el.dataset.id);
+          const item = galleryItems.find(i => i.id === id);
+          openLightbox(item);
+        });
+      });
+    }
+
+    function openLightbox(item) {
+      const lightbox = document.getElementById('lightbox');
+      const body = document.getElementById('lightbox-body');
+      const caption = document.getElementById('lightbox-caption');
+
+      body.innerHTML = `
+        <div style="width: 70vw; max-width: 800px; height: 50vh; background: ${item.color}; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--color-text-secondary);">
+          Image placeholder
+        </div>
+      `;
+      caption.textContent = item.label;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGallery();
+
+      // Filter buttons
+      document.querySelectorAll('.gallery-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          renderGallery();
+        });
+      });
+
+      // Lightbox close
+      document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+      document.getElementById('lightbox').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeLightbox();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeLightbox();
+      });
+    });
+  </script>
+</body>
+</html>

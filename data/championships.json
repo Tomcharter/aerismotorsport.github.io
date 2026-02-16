@@ -1,0 +1,41 @@
+{
+  "current": [
+    {
+      "season": "2025 S1",
+      "series": "IMSA Endurance Series",
+      "position": 2,
+      "points": 520,
+      "split": "Top Split"
+    },
+    {
+      "season": "2025 S1",
+      "series": "GT3 Sprint Series",
+      "position": 1,
+      "points": 610,
+      "split": ""
+    }
+  ],
+  "won": [
+    {
+      "season": "2024 S4",
+      "series": "GT3 Sprint Series",
+      "position": 1,
+      "finalPoints": 312,
+      "split": ""
+    },
+    {
+      "season": "2024 S2",
+      "series": "Ferrari GT3 Challenge",
+      "position": 1,
+      "finalPoints": 289,
+      "split": "Top Split"
+    },
+    {
+      "season": "2024 S1",
+      "series": "IMSA Endurance Series",
+      "position": 1,
+      "finalPoints": 276,
+      "split": ""
+    }
+  ]
+}

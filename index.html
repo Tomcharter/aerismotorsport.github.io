@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aeris Motorsport — Competitive iRacing Team</title>
+  <meta name="description" content="Aeris Motorsport is a competitive iRacing team racing in GT3, IMSA Endurance, and more. Follow our results, drivers, and championship campaigns.">
+  <meta property="og:title" content="Aeris Motorsport">
+  <meta property="og:description" content="Competitive iRacing team — GT3, IMSA Endurance, and more.">
+  <meta property="og:image" content="images/Logo.webp">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav"></nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <img src="images/Logo.webp" alt="Aeris Motorsport Logo" class="hero-logo">
+      <h1><span class="accent">Aeris</span> Motorsport</h1>
+      <p class="hero-tagline">Pushing the limits on the virtual track. Competitive iRacing team racing in GT3, endurance, and beyond.</p>
+      <div class="hero-buttons">
+        <a href="results.html" class="btn btn-primary">View Results</a>
+        <a href="about.html" class="btn btn-outline">About Us</a>
+      </div>
+    </section>
+
+    <!-- Latest Result -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Latest Result</h2>
+          <p>Our most recent race performance</p>
+        </div>
+        <div class="latest-result" id="latest-result">
+          <div class="card">
+            <p class="text-secondary">Loading latest result...</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="results.html" class="btn btn-outline">All Results &rarr;</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const results = await fetchJSON('data/results.json');
+
+      if (results) {
+        // Latest result (sort by date desc)
+        const sorted = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const latest = sorted[0];
+        if (latest) {
+          const container = document.getElementById('latest-result');
+          const dateStr = new Date(latest.date).toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'short', year: 'numeric'
+          });
+
+          container.innerHTML = `
+            <div class="card">
+              <h3>${latest.track}</h3>
+              <div class="result-meta">
+                <span>${dateStr}</span>
+                <span>${latest.series}</span>
+                <span>${latest.car}</span>
+              </div>
+              <div class="result-positions">
+                <div class="result-team-row">
+                  <div class="result-team-position">
+                    <span class="text-secondary" style="font-size:0.85rem;">P${latest.startPos} &rarr;</span>
+                    <span class="position-badge ${latest.finishPos <= 3 ? 'top3' : latest.finishPos <= 10 ? 'top10' : ''}">P${latest.finishPos}</span>
+                  </div>
+                  <div class="result-team-drivers">${latest.drivers.join(', ')}</div>
+                </div>
+              </div>
+              ${latest.notes ? `<p class="result-notes">"${latest.notes}"</p>` : ''}
+            </div>
+          `;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

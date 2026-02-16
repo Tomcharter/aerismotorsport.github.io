@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drivers — Aeris Motorsport</title>
+  <meta name="description" content="Meet the drivers of Aeris Motorsport — the talented racers behind our iRacing campaigns.">
+  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav"></nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Our <span class="text-accent">Drivers</span></h1>
+      <p>The talented racers that make up the Aeris Motorsport roster.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="drivers-grid" id="drivers-grid">
+          <p class="text-secondary">Loading drivers...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const drivers = await fetchJSON('data/drivers.json');
+      const grid = document.getElementById('drivers-grid');
+
+      if (!drivers || drivers.length === 0) {
+        grid.innerHTML = '<p class="text-secondary">No driver data available.</p>';
+        return;
+      }
+
+      grid.innerHTML = drivers.map(d => {
+        const initials = d.name.split(' ').map(n => n[0]).join('');
+        const photoHTML = d.photo
+          ? `<img src="${d.photo}" alt="${d.name}">`
+          : initials;
+
+        return `
+          <div class="card driver-card">
+            <div class="driver-photo">${photoHTML}</div>
+            <h3 class="driver-name">${d.name}</h3>
+            <div class="driver-role">${d.role}</div>
+            <dl class="driver-details">
+              <dt>Favourite Car</dt>
+              <dd>${d.favouriteCar}</dd>
+              <dt>Favourite Track</dt>
+              <dd>${d.favouriteTrack}</dd>
+              <dt>iRating</dt>
+              <dd>${d.irating}</dd>
+            </dl>
+            <p class="driver-bio">${d.bio}</p>
+          </div>
+        `;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

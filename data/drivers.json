@@ -3,7 +3,7 @@
     "id": "driver-1",
     "name": "Alex Morgan",
     "role": "Team Owner & Driver",
-    "irating": "4872",
+    "irating": "487294",
     "bio": "Founded Aeris Motorsport in 2023 with a vision to build a competitive and welcoming sim racing community. A versatile driver equally at home in GT3 machinery and open-wheelers, Alex brings strategic thinking and consistent pace to every race.",
     "favouriteCar": "Ferrari 296 GT3",
     "favouriteTrack": "Spa-Francorchamps",
@@ -48,5 +48,15 @@
     "favouriteCar": "Aston Martin Vantage GT3",
     "favouriteTrack": "Monza",
     "photo": ""
+  },
+  {
+    "id": "driver-peter-j-clarke",
+    "name": "Peter J Clarke",
+    "role": "Team Owner and Driver",
+    "irating": "5.3k",
+    "bio": "Test 123",
+    "favouriteCar": "GT3s",
+    "favouriteTrack": "Jerez",
+    "photo": "https://media.discordapp.net/attachments/1001173582161915927/1476665442029277184/image.png?ex=69a1f35c&is=69a0a1dc&hm=8e7428c12057c902c436817aaee0222a29e808e47ba1b60ae81c95a56a50ccca&=&format=webp&quality=lossless&width=606&height=897"
   }
 ]

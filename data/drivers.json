@@ -1,12 +1,52 @@
 [
   {
-    "id": "driver-peter-j-clarke",
-    "name": "Peter J Clarke",
-    "role": "Team Owner and Driver",
-    "irating": "5.3k",
-    "bio": "Test 123",
-    "favouriteCar": "GT3s",
-    "favouriteTrack": "Jerez",
-    "photo": "https://media.discordapp.net/attachments/1001173582161915927/1476665442029277184/image.png?ex=69a1f35c&is=69a0a1dc&hm=8e7428c12057c902c436817aaee0222a29e808e47ba1b60ae81c95a56a50ccca&=&format=webp&quality=lossless&width=606&height=897"
+    "id": "driver-1",
+    "name": "Alex Morgan",
+    "role": "Team Owner & Driver",
+    "irating": "4872",
+    "bio": "Founded Aeris Motorsport in 2023 with a vision to build a competitive and welcoming sim racing community. A versatile driver equally at home in GT3 machinery and open-wheelers, Alex brings strategic thinking and consistent pace to every race.",
+    "favouriteCar": "Ferrari 296 GT3",
+    "favouriteTrack": "Spa-Francorchamps",
+    "photo": ""
+  },
+  {
+    "id": "driver-2",
+    "name": "Sarah Chen",
+    "role": "Lead Driver",
+    "irating": "523104",
+    "bio": "Known for her aggressive yet clean racecraft, Sarah has been the team's leading points scorer for two consecutive seasons. Her ability to read tyre wear and adapt strategy mid-race makes her a formidable endurance competitor.",
+    "favouriteCar": "Porsche 911 GT3 R",
+    "favouriteTrack": "Suzuka International Racing Course",
+    "photo": ""
+  },
+  {
+    "id": "driver-3",
+    "name": "James O'Brien",
+    "role": "Driver",
+    "irating": "618372",
+    "bio": "A late-night racer with a knack for last-lap overtakes. James joined Aeris in 2024 and quickly proved himself with a string of podium finishes in the GT3 Sprint Series. Rarely seen without a replay analysis open.",
+    "favouriteCar": "BMW M4 GT3",
+    "favouriteTrack": "Nürburgring Grand Prix",
+    "photo": ""
+  },
+  {
+    "id": "driver-4",
+    "name": "Marcus Rivera",
+    "role": "Driver & Strategist",
+    "irating": "701455",
+    "bio": "The team's data guru. Marcus combines raw speed with meticulous preparation — his pre-race setup work has lifted the whole team's performance. Also serves as the primary strategist during endurance events.",
+    "favouriteCar": "McLaren 720S GT3 Evo",
+    "favouriteTrack": "Mount Panorama Circuit",
+    "photo": ""
+  },
+  {
+    "id": "driver-5",
+    "name": "Lena Kowalski",
+    "role": "Development Driver",
+    "irating": "845290",
+    "bio": "The newest addition to the Aeris roster. Lena came through the team's development programme and is rapidly climbing the iRating ladder. Watch this space — she's tipped to be a future championship contender.",
+    "favouriteCar": "Aston Martin Vantage GT3",
+    "favouriteTrack": "Monza",
+    "photo": ""
   }
 ]

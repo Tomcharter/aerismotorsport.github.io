@@ -114,6 +114,8 @@ function renderDrivers() {
           <span class="text-secondary"> — ${escapeHTML(d.role)}</span>
         </div>
         <div class="admin-entry-actions">
+          <button class="btn-sm btn-edit" onclick="moveDriver(${i},-1)" ${i === 0 ? 'disabled' : ''} title="Move up">&#9650;</button>
+          <button class="btn-sm btn-edit" onclick="moveDriver(${i},1)" ${i === driversData.length - 1 ? 'disabled' : ''} title="Move down">&#9660;</button>
           <button class="btn-sm btn-edit" onclick="editDriver(${i})">Edit</button>
           <button class="btn-sm btn-delete" onclick="deleteDriver(${i})">Delete</button>
         </div>
@@ -236,6 +238,16 @@ function saveEditDriver(index) {
 function deleteDriver(index) {
   if (!confirm(`Delete "${driversData[index].name}"?`)) return;
   driversData.splice(index, 1);
+  renderDrivers();
+  saveAll();
+}
+
+function moveDriver(index, direction) {
+  const newIndex = index + direction;
+  if (newIndex < 0 || newIndex >= driversData.length) return;
+  const temp = driversData[index];
+  driversData[index] = driversData[newIndex];
+  driversData[newIndex] = temp;
   renderDrivers();
   saveAll();
 }

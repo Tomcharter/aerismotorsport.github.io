@@ -1,14 +1,86 @@
 [
-  { "id": 1, "category": "liveries", "label": "Aeris GT3 Livery — Ferrari 296", "color": "#1a5c2a", "image": "" },
-  { "id": 2, "category": "liveries", "label": "Aeris GT3 Livery — BMW M4", "color": "#1a3a5c", "image": "" },
-  { "id": 3, "category": "liveries", "label": "Aeris GT3 Livery — Porsche 911", "color": "#5c1a3a", "image": "" },
-  { "id": 4, "category": "screenshots", "label": "Daytona 24h — Start", "color": "#2a2a5c", "image": "" },
-  { "id": 5, "category": "screenshots", "label": "Spa Battle — Eau Rouge", "color": "#3a5c1a", "image": "" },
-  { "id": 6, "category": "screenshots", "label": "Suzuka — Victory Lap", "color": "#5c4a1a", "image": "" },
-  { "id": 7, "category": "screenshots", "label": "Monza — Slipstream", "color": "#1a4a5c", "image": "" },
-  { "id": 8, "category": "results", "label": "2024 S4 — GT3 Sprint Championship Win", "color": "#4a1a5c", "image": "" },
-  { "id": 9, "category": "results", "label": "2024 S2 — Ferrari Challenge Win", "color": "#5c1a1a", "image": "" },
-  { "id": 10, "category": "results", "label": "2025 S1 — Sebring Race Win", "color": "#1a5c4a", "image": "" },
-  { "id": 11, "category": "liveries", "label": "Aeris Endurance Livery — Special Edition", "color": "#3a3a1a", "image": "" },
-  { "id": 12, "category": "screenshots", "label": "Road Atlanta — Wet Race", "color": "#2a4a3a", "image": "" }
+  {
+    "id": 1,
+    "category": "liveries",
+    "label": "Aeris GT3 Livery — Ferrari 296",
+    "color": "#1a5c2a",
+    "image": ""
+  },
+  {
+    "id": 2,
+    "category": "liveries",
+    "label": "Aeris GT3 Livery — BMW M4",
+    "color": "#1a3a5c",
+    "image": ""
+  },
+  {
+    "id": 3,
+    "category": "liveries",
+    "label": "Aeris GT3 Livery — Porsche 911",
+    "color": "#5c1a3a",
+    "image": ""
+  },
+  {
+    "id": 4,
+    "category": "screenshots",
+    "label": "Daytona 24h — Start",
+    "color": "#2a2a5c",
+    "image": ""
+  },
+  {
+    "id": 5,
+    "category": "screenshots",
+    "label": "Spa Battle — Eau Rouge",
+    "color": "#3a5c1a",
+    "image": ""
+  },
+  {
+    "id": 6,
+    "category": "screenshots",
+    "label": "Suzuka — Victory Lap",
+    "color": "#5c4a1a",
+    "image": ""
+  },
+  {
+    "id": 7,
+    "category": "screenshots",
+    "label": "Monza — Slipstream",
+    "color": "#1a4a5c",
+    "image": ""
+  },
+  {
+    "id": 8,
+    "category": "results",
+    "label": "2024 S4 — GT3 Sprint Championship Win",
+    "color": "#4a1a5c",
+    "image": ""
+  },
+  {
+    "id": 9,
+    "category": "results",
+    "label": "2024 S2 — Ferrari Challenge Win",
+    "color": "#5c1a1a",
+    "image": ""
+  },
+  {
+    "id": 10,
+    "category": "results",
+    "label": "2025 S1 — Sebring Race Win",
+    "color": "#1a5c4a",
+    "image": ""
+  },
+  {
+    "id": 11,
+    "category": "liveries",
+    "label": "Aeris Endurance Livery — Special Edition",
+    "color": "#3a3a1a",
+    "image": ""
+  },
+  {
+    "id": 12,
+    "category": "screenshots",
+    "label": "Road Atlanta — Wet Race",
+    "color": "#2a4a3a",
+    "image": ""
+  }
 ]

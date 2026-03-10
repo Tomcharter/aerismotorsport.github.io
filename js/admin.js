@@ -160,6 +160,7 @@ function driverForm(driver, onSave, onCancel) {
           <div style="display:flex;gap:0.5rem;">
             <input type="text" id="df-photo" value="${escapeHTML(d.photo || '')}" placeholder="URL or upload" style="flex:1;">
             <button class="btn-sm btn-edit" type="button" onclick="pickImage('df-photo')">Upload</button>
+            <button class="btn-sm btn-delete" type="button" onclick="document.getElementById('df-photo').value=''">Clear</button>
           </div>
         </div>
         <div class="form-group">
@@ -797,6 +798,7 @@ function galleryForm(item, onSave, onCancel) {
           <div style="display:flex;gap:0.5rem;">
             <input type="text" id="gf-image" value="${escapeHTML(g.image || '')}" placeholder="URL or upload" style="flex:1;">
             <button class="btn-sm btn-edit" type="button" onclick="pickImage('gf-image')">Upload</button>
+            <button class="btn-sm btn-delete" type="button" onclick="document.getElementById('gf-image').value=''">Clear</button>
           </div>
         </div>
         <div class="form-group">

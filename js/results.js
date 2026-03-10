@@ -58,27 +58,27 @@ function renderResults() {
 
     return `
       <div class="card result-card">
-        <h3>${r.track}</h3>
+        <h3>${escapeHTML(r.track)}</h3>
         <div class="result-meta">
           <span>${dateStr}</span>
-          <span>${r.season}</span>
-          <span>${r.series}</span>
-          <span>${r.car}</span>
+          <span>${escapeHTML(r.season)}</span>
+          <span>${escapeHTML(r.series)}</span>
+          <span>${escapeHTML(r.car)}</span>
         </div>
         <div class="result-positions">
           <div class="result-team-row">
             <div class="result-team-position">
-              <span class="text-secondary" style="font-size:0.85rem;">P${r.startPos} &rarr;</span>
-              <span class="position-badge ${r.finishPos <= 3 ? 'top3' : r.finishPos <= 10 ? 'top10' : ''}">P${r.finishPos}</span>
+              <span class="text-secondary" style="font-size:0.85rem;">P${parseInt(r.startPos, 10)} &rarr;</span>
+              <span class="position-badge ${r.finishPos <= 3 ? 'top3' : r.finishPos <= 10 ? 'top10' : ''}">P${parseInt(r.finishPos, 10)}</span>
             </div>
-            <div class="result-team-drivers">${r.drivers.join(', ')}</div>
+            <div class="result-team-drivers">${r.drivers.map(d => escapeHTML(d)).join(', ')}</div>
           </div>
         </div>
-        ${r.notes ? `<p class="result-notes">"${r.notes}"</p>` : ''}
+        ${r.notes ? `<p class="result-notes">"${escapeHTML(r.notes)}"</p>` : ''}
+        ${r.images && r.images.length > 0 ? `
         <div class="result-images">
-          <div class="result-image-placeholder">Race Screenshot</div>
-          <div class="result-image-placeholder">Car Photo</div>
-        </div>
+          ${r.images.map(url => `<img src="${escapeHTML(url)}" alt="${escapeHTML(r.track)}" class="result-image" loading="lazy">`).join('')}
+        </div>` : ''}
       </div>
     `;
   }).join('');

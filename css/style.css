@@ -7,12 +7,12 @@
   --color-accent: #CCFF00;
   --color-accent-dim: rgba(204, 255, 0, 0.15);
   --color-accent-hover: #e0ff4d;
-  --color-bg: #0F1923;
-  --color-surface: #1A2B38;
-  --color-surface-light: #243B47;
+  --color-bg: #0a0a0a;
+  --color-surface: #161616;
+  --color-surface-light: #222222;
   --color-text: #FFFFFF;
-  --color-text-secondary: #94A3B8;
-  --color-border: #243B47;
+  --color-text-secondary: #9ca3af;
+  --color-border: #2a2a2a;
   --color-success: #22c55e;
   --color-danger: #ef4444;
 
@@ -140,7 +140,7 @@ main {
   left: 0;
   right: 0;
   height: var(--nav-height);
-  background: rgba(15, 25, 35, 0.95);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
@@ -287,7 +287,7 @@ main {
   justify-content: center;
   text-align: center;
   min-height: calc(100vh - var(--nav-height));
-  padding: 4rem 1.5rem;
+  padding: 0;
   position: relative;
   overflow: hidden;
 }
@@ -304,10 +304,21 @@ main {
   pointer-events: none;
 }
 
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem 2rem;
+}
+
 .hero-logo {
   width: clamp(120px, 20vw, 200px);
   margin-bottom: 2rem;
   animation: fadeInUp 0.8s ease;
+  mix-blend-mode: lighten;
+  border-radius: var(--radius-md);
 }
 
 .hero h1 {
@@ -336,6 +347,83 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+/* Hero car banner — bottom 1/3 of viewport */
+.hero-car-banner {
+  width: 100%;
+  height: 33vh;
+  min-height: 200px;
+  position: relative;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+@media (max-height: 500px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-car-banner {
+    height: 200px;
+  }
+}
+
+.hero-images-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image-slot {
+  overflow: hidden;
+  position: relative;
+  border-top: 1px solid var(--color-border);
+}
+
+.hero-image-slot:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.hero-image-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-car-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-light) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
+.hero-car-placeholder .placeholder-icon {
+  font-size: 2rem;
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .hero-images-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .hero-image-slot:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-car-banner {
+    height: auto;
+    min-height: 300px;
+  }
 }
 
 @keyframes fadeInUp {
@@ -476,29 +564,36 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
+  gap: 1rem;
 }
 
 .result-team-position {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .result-team-drivers {
   color: var(--color-text-secondary);
   font-size: 0.9rem;
+  text-align: right;
+  min-width: 0;
 }
 
 .position-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
+  min-width: 32px;
   height: 32px;
-  border-radius: 50%;
+  padding: 0 6px;
+  border-radius: 50px;
   font-weight: 700;
   font-size: 0.85rem;
   font-family: var(--font-heading);
+  background: var(--color-surface-light);
+  color: var(--color-text-secondary);
 }
 
 .position-badge.top3 {
@@ -657,17 +752,12 @@ main {
   flex-wrap: wrap;
 }
 
-.result-image-placeholder {
+.result-image {
   width: 200px;
   height: 120px;
-  background: var(--color-surface-light);
+  object-fit: cover;
   border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
-  border: 1px dashed var(--color-border);
+  border: 1px solid var(--color-border);
 }
 
 .no-results {
@@ -867,7 +957,7 @@ main {
   left: 0;
   right: 0;
   padding: 0.75rem;
-  background: linear-gradient(transparent, rgba(15, 25, 35, 0.9));
+  background: linear-gradient(transparent, rgba(10, 10, 10, 0.9));
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -1074,6 +1164,25 @@ main {
   border: 0;
 }
 
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+  color: var(--color-bg);
+}
+
 /* ============================================
    Admin Panel
    ============================================ */
@@ -1192,11 +1301,13 @@ main {
 
 /* --- Small Buttons --- */
 .btn-sm {
-  padding: 0.35rem 0.85rem;
-  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
   font-weight: 600;
   border-radius: var(--radius-sm);
   transition: all var(--transition);
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .btn-edit {
@@ -1324,4 +1435,29 @@ main {
   .admin-entry-header {
     flex-direction: column;
   }
+}
+
+/* --- Image Rows (admin) --- */
+.image-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.image-row input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: border-color var(--transition);
+}
+
+.image-row input:focus {
+  border-color: var(--color-accent);
+  outline: none;
 }

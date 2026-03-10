@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gallery — Aeris Motorsport</title>
   <meta name="description" content="Screenshots, car liveries, and race moments from Aeris Motorsport.">
-  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="icon" type="image/png" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <nav class="site-nav"></nav>
 
-  <main>
+  <main id="main">
     <div class="page-header">
       <h1><span class="text-accent">Gallery</span></h1>
       <p>Car liveries, race screenshots, and memorable moments.</p>
@@ -22,11 +23,11 @@
 
     <section class="section">
       <div class="container">
-        <div class="gallery-filters">
-          <button class="gallery-filter-btn active" data-filter="all">All</button>
-          <button class="gallery-filter-btn" data-filter="liveries">Car Liveries</button>
-          <button class="gallery-filter-btn" data-filter="screenshots">Race Screenshots</button>
-          <button class="gallery-filter-btn" data-filter="results">Results</button>
+        <div class="gallery-filters" role="group" aria-label="Filter gallery">
+          <button class="gallery-filter-btn active" data-filter="all" aria-pressed="true">All</button>
+          <button class="gallery-filter-btn" data-filter="liveries" aria-pressed="false">Car Liveries</button>
+          <button class="gallery-filter-btn" data-filter="screenshots" aria-pressed="false">Race Screenshots</button>
+          <button class="gallery-filter-btn" data-filter="results" aria-pressed="false">Results</button>
         </div>
 
         <div class="gallery-grid" id="gallery-grid"></div>
@@ -34,9 +35,9 @@
     </section>
 
     <!-- Lightbox -->
-    <div class="lightbox-overlay" id="lightbox">
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
       <div class="lightbox-content">
-        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">&times;</button>
         <div id="lightbox-body"></div>
         <div class="lightbox-caption" id="lightbox-caption"></div>
       </div>
@@ -47,22 +48,9 @@
 
   <script src="js/main.js"></script>
   <script>
-    const galleryItems = [
-      { id: 1, category: 'liveries', label: 'Aeris GT3 Livery — Ferrari 296', color: '#1a5c2a' },
-      { id: 2, category: 'liveries', label: 'Aeris GT3 Livery — BMW M4', color: '#1a3a5c' },
-      { id: 3, category: 'liveries', label: 'Aeris GT3 Livery — Porsche 911', color: '#5c1a3a' },
-      { id: 4, category: 'screenshots', label: 'Daytona 24h — Start', color: '#2a2a5c' },
-      { id: 5, category: 'screenshots', label: 'Spa Battle — Eau Rouge', color: '#3a5c1a' },
-      { id: 6, category: 'screenshots', label: 'Suzuka — Victory Lap', color: '#5c4a1a' },
-      { id: 7, category: 'screenshots', label: 'Monza — Slipstream', color: '#1a4a5c' },
-      { id: 8, category: 'results', label: '2024 S4 — GT3 Sprint Championship Win', color: '#4a1a5c' },
-      { id: 9, category: 'results', label: '2024 S2 — Ferrari Challenge Win', color: '#5c1a1a' },
-      { id: 10, category: 'results', label: '2025 S1 — Sebring Race Win', color: '#1a5c4a' },
-      { id: 11, category: 'liveries', label: 'Aeris Endurance Livery — Special Edition', color: '#3a3a1a' },
-      { id: 12, category: 'screenshots', label: 'Road Atlanta — Wet Race', color: '#2a4a3a' },
-    ];
-
+    let galleryItems = [];
     let activeFilter = 'all';
+    let lastFocusedElement = null;
 
     function renderGallery() {
       const grid = document.getElementById('gallery-grid');
@@ -70,54 +58,95 @@
         ? galleryItems
         : galleryItems.filter(item => item.category === activeFilter);
 
-      grid.innerHTML = filtered.map(item => `
-        <div class="gallery-item" data-id="${item.id}" style="background: ${item.color};">
-          <div class="placeholder-content">
-            <span class="placeholder-icon">&#128247;</span>
-            <span>${item.label}</span>
+      grid.innerHTML = filtered.map(item => {
+        const safeColor = isValidColor(item.color) ? item.color : 'var(--color-surface-light)';
+        if (item.image) {
+          return `
+            <div class="gallery-item" data-id="${item.id}" tabindex="0" role="button" aria-label="${escapeHTML(item.label)}">
+              <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.label)}" loading="lazy">
+              <div class="gallery-label">${escapeHTML(item.label)}</div>
+            </div>
+          `;
+        }
+        return `
+          <div class="gallery-item" data-id="${item.id}" tabindex="0" role="button" aria-label="${escapeHTML(item.label)}" style="background: ${safeColor};">
+            <div class="placeholder-content">
+              <span class="placeholder-icon">&#128247;</span>
+              <span>${escapeHTML(item.label)}</span>
+            </div>
+            <div class="gallery-label">${escapeHTML(item.label)}</div>
           </div>
-          <div class="gallery-label">${item.label}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
-      // Click handlers
+      // Click + keyboard handlers
       grid.querySelectorAll('.gallery-item').forEach(el => {
-        el.addEventListener('click', () => {
+        function activate() {
           const id = parseInt(el.dataset.id);
           const item = galleryItems.find(i => i.id === id);
-          openLightbox(item);
+          openLightbox(item, el);
+        }
+        el.addEventListener('click', activate);
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
         });
       });
     }
 
-    function openLightbox(item) {
+    function openLightbox(item, triggerEl) {
       const lightbox = document.getElementById('lightbox');
       const body = document.getElementById('lightbox-body');
       const caption = document.getElementById('lightbox-caption');
 
-      body.innerHTML = `
-        <div style="width: 70vw; max-width: 800px; height: 50vh; background: ${item.color}; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--color-text-secondary);">
-          Image placeholder
-        </div>
-      `;
+      lastFocusedElement = triggerEl || document.activeElement;
+
+      if (item.image) {
+        body.innerHTML = `<img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.label)}">`;
+      } else {
+        const safeColor = isValidColor(item.color) ? item.color : 'var(--color-surface-light)';
+        body.innerHTML = `
+          <div style="width: 70vw; max-width: 800px; height: 50vh; background: ${safeColor}; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--color-text-secondary);">
+            Image placeholder
+          </div>
+        `;
+      }
       caption.textContent = item.label;
       lightbox.classList.add('open');
       document.body.style.overflow = 'hidden';
+
+      // Move focus into lightbox
+      document.getElementById('lightbox-close').focus();
     }
 
     function closeLightbox() {
       document.getElementById('lightbox').classList.remove('open');
       document.body.style.overflow = '';
+
+      // Return focus to trigger element
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const data = await fetchJSON('data/gallery.json');
+      if (data) galleryItems = data;
+
       renderGallery();
 
       // Filter buttons
       document.querySelectorAll('.gallery-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.gallery-filter-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
           btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
           activeFilter = btn.dataset.filter;
           renderGallery();
         });
@@ -129,7 +158,7 @@
         if (e.target === e.currentTarget) closeLightbox();
       });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'Escape' && document.getElementById('lightbox').classList.contains('open')) closeLightbox();
       });
     });
   </script>

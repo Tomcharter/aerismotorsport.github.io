@@ -12,7 +12,8 @@
       "Alex Morgan",
       "Sarah Chen"
     ],
-    "notes": "Strong recovery drive from P12 to podium. Clean pit stops made the difference."
+    "notes": "Strong recovery drive from P12 to podium. Clean pit stops made the difference.",
+    "images": []
   },
   {
     "id": "race-2",
@@ -27,7 +28,8 @@
       "James O'Brien",
       "Marcus Rivera"
     ],
-    "notes": "James narrowly missed the win after a thrilling battle in the final three laps."
+    "notes": "James narrowly missed the win after a thrilling battle in the final three laps.",
+    "images": []
   },
   {
     "id": "race-3",
@@ -43,7 +45,8 @@
       "Sarah Chen",
       "Marcus Rivera"
     ],
-    "notes": "First win of the season! Alex led from lap 42 to the chequered flag."
+    "notes": "First win of the season! Alex led from lap 42 to the chequered flag.",
+    "images": []
   },
   {
     "id": "race-4",
@@ -58,7 +61,8 @@
       "Sarah Chen",
       "Lena Kowalski"
     ],
-    "notes": "Dominant pole-to-flag victory. Lena showed great pace on her team debut stint."
+    "notes": "Dominant pole-to-flag victory. Lena showed great pace on her team debut stint.",
+    "images": []
   },
   {
     "id": "race-5",
@@ -73,7 +77,8 @@
       "Alex Morgan",
       "James O'Brien"
     ],
-    "notes": "Tricky conditions with variable weather. James adapted brilliantly in the wet stints."
+    "notes": "Tricky conditions with variable weather. James adapted brilliantly in the wet stints.",
+    "images": []
   },
   {
     "id": "race-6",
@@ -88,7 +93,8 @@
       "James O'Brien",
       "Marcus Rivera"
     ],
-    "notes": "Season finale victory that clinched the championship for the team."
+    "notes": "Season finale victory that clinched the championship for the team.",
+    "images": []
   },
   {
     "id": "race-7",
@@ -103,7 +109,8 @@
       "Marcus Rivera",
       "Sarah Chen"
     ],
-    "notes": "Strong team effort — the car was consistently in the top three all race."
+    "notes": "Strong team effort — the car was consistently in the top three all race.",
+    "images": []
   },
   {
     "id": "race-8",
@@ -118,6 +125,7 @@
       "Alex Morgan",
       "Sarah Chen"
     ],
-    "notes": "Alex's aggressive tyre strategy paid off in the second stint."
+    "notes": "Alex's aggressive tyre strategy paid off in the second stint.",
+    "images": []
   }
 ]

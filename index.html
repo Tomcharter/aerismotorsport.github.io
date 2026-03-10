@@ -4,29 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aeris Motorsport — Competitive iRacing Team</title>
-  <meta name="description" content="Aeris Motorsport is a competitive iRacing team racing in GT3, IMSA Endurance, and more. Follow our results, drivers, and championship campaigns.">
+  <meta name="description" content="Aeris Motorsport is a competitive iRacing team racing in GT3 endurance events. Follow our results, drivers, and championship campaigns.">
   <meta property="og:title" content="Aeris Motorsport">
-  <meta property="og:description" content="Competitive iRacing team — GT3, IMSA Endurance, and more.">
-  <meta property="og:image" content="images/Logo.webp">
+  <meta property="og:description" content="Competitive GT3 endurance team on iRacing.">
+  <meta property="og:image" content="https://aerismotorsport.github.io/images/logo.png">
+  <meta property="og:url" content="https://aerismotorsport.github.io/">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/webp" href="images/Logo.webp">
+  <link rel="icon" type="image/png" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <nav class="site-nav"></nav>
 
-  <main>
+  <main id="main">
     <!-- Hero -->
     <section class="hero">
-      <img src="images/Logo.webp" alt="Aeris Motorsport Logo" class="hero-logo">
-      <h1><span class="accent">Aeris</span> Motorsport</h1>
-      <p class="hero-tagline">Pushing the limits on the virtual track. Competitive iRacing team racing in GT3, endurance, and beyond.</p>
-      <div class="hero-buttons">
-        <a href="results.html" class="btn btn-primary">View Results</a>
-        <a href="about.html" class="btn btn-outline">About Us</a>
+      <div class="hero-content">
+        <img src="images/logo.png" alt="Aeris Motorsport Logo" class="hero-logo">
+        <h1><span class="accent">Aeris</span> Motorsport</h1>
+        <p class="hero-tagline">Competitive GT3 endurance team on iRacing</p>
+        <div class="hero-buttons">
+          <a href="about.html" class="btn btn-outline">About Us</a>
+          <a href="drivers.html" class="btn btn-outline">The Drivers</a>
+          <a href="results.html" class="btn btn-primary">Latest Results</a>
+        </div>
+      </div>
+      <div class="hero-car-banner" id="hero-car-banner">
+        <div class="hero-images-grid">
+          <div class="hero-image-slot"><div class="hero-car-placeholder"><span class="placeholder-icon">&#127950;</span><span>Image coming soon</span></div></div>
+          <div class="hero-image-slot"><div class="hero-car-placeholder"><span class="placeholder-icon">&#127950;</span><span>Image coming soon</span></div></div>
+          <div class="hero-image-slot"><div class="hero-car-placeholder"><span class="placeholder-icon">&#127950;</span><span>Image coming soon</span></div></div>
+        </div>
       </div>
     </section>
 
@@ -55,40 +67,64 @@
   <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const results = await fetchJSON('data/results.json');
-
-      if (results) {
-        // Latest result (sort by date desc)
-        const sorted = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
-        const latest = sorted[0];
-        if (latest) {
-          const container = document.getElementById('latest-result');
-          const dateStr = new Date(latest.date).toLocaleDateString('en-GB', {
-            day: 'numeric', month: 'short', year: 'numeric'
-          });
-
-          container.innerHTML = `
-            <div class="card">
-              <h3>${latest.track}</h3>
-              <div class="result-meta">
-                <span>${dateStr}</span>
-                <span>${latest.series}</span>
-                <span>${latest.car}</span>
-              </div>
-              <div class="result-positions">
-                <div class="result-team-row">
-                  <div class="result-team-position">
-                    <span class="text-secondary" style="font-size:0.85rem;">P${latest.startPos} &rarr;</span>
-                    <span class="position-badge ${latest.finishPos <= 3 ? 'top3' : latest.finishPos <= 10 ? 'top10' : ''}">P${latest.finishPos}</span>
-                  </div>
-                  <div class="result-team-drivers">${latest.drivers.join(', ')}</div>
-                </div>
-              </div>
-              ${latest.notes ? `<p class="result-notes">"${latest.notes}"</p>` : ''}
-            </div>
-          `;
+      // Load hero images from site.json
+      const siteData = await fetchJSON('data/site.json');
+      if (siteData && siteData.heroImages) {
+        const banner = document.getElementById('hero-car-banner');
+        const hasAnyImage = siteData.heroImages.some(img => img.url);
+        if (hasAnyImage) {
+          banner.innerHTML = '<div class="hero-images-grid">' +
+            siteData.heroImages.map(img => {
+              if (img.url) {
+                return `<div class="hero-image-slot"><img src="${escapeHTML(img.url)}" alt="${escapeHTML(img.alt || 'GT3 car')}" loading="lazy"></div>`;
+              }
+              return '<div class="hero-image-slot"><div class="hero-car-placeholder"><span class="placeholder-icon">&#127950;</span><span>Image coming soon</span></div></div>';
+            }).join('') +
+          '</div>';
         }
       }
+
+      // Load latest result
+      const results = await fetchJSON('data/results.json');
+      const container = document.getElementById('latest-result');
+
+      if (!results) {
+        container.innerHTML = '<div class="card"><p class="text-secondary">Could not load results.</p></div>';
+        return;
+      }
+
+      const sorted = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
+      const latest = sorted[0];
+      if (!latest) return;
+
+      const dateStr = new Date(latest.date).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+
+      container.innerHTML = `
+        <div class="card">
+          <h3>${escapeHTML(latest.track)}</h3>
+          <div class="result-meta">
+            <span>${dateStr}</span>
+            <span>${escapeHTML(latest.series)}</span>
+            <span>${escapeHTML(latest.car)}</span>
+          </div>
+          <div class="result-positions">
+            <div class="result-team-row">
+              <div class="result-team-position">
+                <span class="text-secondary" style="font-size:0.85rem;">P${parseInt(latest.startPos, 10)} &rarr;</span>
+                <span class="position-badge ${latest.finishPos <= 3 ? 'top3' : latest.finishPos <= 10 ? 'top10' : ''}">P${parseInt(latest.finishPos, 10)}</span>
+              </div>
+              <div class="result-team-drivers">${latest.drivers.map(d => escapeHTML(d)).join(', ')}</div>
+            </div>
+          </div>
+          ${latest.notes ? `<p class="result-notes">"${escapeHTML(latest.notes)}"</p>` : ''}
+          ${latest.images && latest.images.length > 0 ? `
+          <div class="result-images">
+            ${latest.images.map(url => `<img src="${escapeHTML(url)}" alt="${escapeHTML(latest.track)}" class="result-image" loading="lazy">`).join('')}
+          </div>` : ''}
+        </div>
+      `;
     });
   </script>
 </body>

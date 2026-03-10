@@ -17,6 +17,19 @@ function getCurrentPage() {
   return file;
 }
 
+/* --- HTML Escaping (XSS prevention) --- */
+function escapeHTML(str) {
+  if (str == null) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+/* --- Validate CSS color (hex only) --- */
+function isValidColor(str) {
+  return /^#[0-9a-fA-F]{3,8}$/.test(str);
+}
+
 /* --- Navigation --- */
 function buildNav() {
   const nav = document.querySelector('.site-nav');
@@ -27,16 +40,16 @@ function buildNav() {
   nav.innerHTML = `
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
-        <img src="images/Logo.webp" alt="Aeris Motorsport Logo">
+        <img src="images/logo.png" alt="Aeris Motorsport Logo">
         <span>Aeris</span>
       </a>
       <button class="nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
-      <div class="nav-links">
+      <div class="nav-links" role="navigation" aria-label="Main navigation">
         ${PAGES.map(p => {
           const isActive = p.href === currentPage || (currentPage === '' && p.href === 'index.html');
-          return `<a href="${p.href}"${isActive ? ' class="active"' : ''}>${p.label}</a>`;
+          return `<a href="${p.href}"${isActive ? ' class="active" aria-current="page"' : ''}>${p.label}</a>`;
         }).join('')}
       </div>
     </div>
@@ -82,11 +95,10 @@ function buildFooter() {
   footer.innerHTML = `
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="images/Logo.webp" alt="Aeris Motorsport">
+        <img src="images/logo.png" alt="Aeris Motorsport">
         <span>Aeris Motorsport</span>
       </div>
       <div class="footer-links">
-        <a href="https://www.instagram.com/aeris_motorsport/" target="_blank" rel="noopener noreferrer">Instagram</a>
         <a href="about.html">About</a>
         <a href="drivers.html">Drivers</a>
         <a href="results.html">Results</a>
@@ -98,10 +110,16 @@ function buildFooter() {
   `;
 }
 
-/* --- Data Fetching --- */
+/* --- Data Fetching (with timeout + cache busting) --- */
 async function fetchJSON(path) {
   try {
-    const res = await fetch(path);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    const separator = path.includes('?') ? '&' : '?';
+    const res = await fetch(`${path}${separator}v=${Date.now()}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
     if (!res.ok) throw new Error(`Failed to load ${path}`);
     return await res.json();
   } catch (err) {

@@ -4,15 +4,18 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await fetchJSON('data/championships.json');
+  const currentContainer = document.getElementById('current-championships');
+  const trophyContainer = document.getElementById('trophy-cabinet');
 
   if (!data) {
-    document.getElementById('current-championships').innerHTML +=
+    currentContainer.innerHTML =
+      '<p class="text-secondary">Could not load championship data.</p>';
+    trophyContainer.innerHTML =
       '<p class="text-secondary">Could not load championship data.</p>';
     return;
   }
 
   // Current standings
-  const currentContainer = document.getElementById('current-championships');
   if (data.current && data.current.length > 0) {
     const header = currentContainer.querySelector('.section-header');
     currentContainer.innerHTML = '';
@@ -23,11 +26,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       section.className = 'championship-card';
       section.innerHTML = `
         <div class="card">
-          <h3>${champ.season}</h3>
-          <p class="series-name">${champ.series}${champ.split ? ' — ' + champ.split : ''}</p>
+          <h3>${escapeHTML(champ.season)}</h3>
+          <p class="series-name">${escapeHTML(champ.series)}${champ.split ? ' — ' + escapeHTML(champ.split) : ''}</p>
           <div class="championship-standing">
-            <span class="position-badge ${champ.position <= 3 ? 'top3' : 'top10'}">P${champ.position}</span>
-            <span class="championship-points">${champ.points} points</span>
+            <span class="position-badge ${champ.position <= 3 ? 'top3' : 'top10'}">P${parseInt(champ.position, 10)}</span>
+            <span class="championship-points">${parseInt(champ.points, 10)} points</span>
           </div>
         </div>
       `;
@@ -38,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Trophy cabinet
-  const trophyContainer = document.getElementById('trophy-cabinet');
   if (data.won && data.won.length > 0) {
     const header = trophyContainer.querySelector('.section-header');
     trophyContainer.innerHTML = '';
@@ -49,10 +51,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     grid.innerHTML = data.won.map(t => `
       <div class="card trophy-card">
         <div class="trophy-icon">&#127942;</div>
-        <h4>${t.season}</h4>
-        <p class="trophy-series">${t.series}${t.split ? ' — ' + t.split : ''}</p>
-        <p class="trophy-winner">P${t.position}</p>
-        <p class="trophy-points">${t.finalPoints} points</p>
+        <h4>${escapeHTML(t.season)}</h4>
+        <p class="trophy-series">${escapeHTML(t.series)}${t.split ? ' — ' + escapeHTML(t.split) : ''}</p>
+        <p class="trophy-winner">P${parseInt(t.position, 10)}</p>
+        <p class="trophy-points">${parseInt(t.finalPoints, 10)} points</p>
       </div>
     `).join('');
     trophyContainer.appendChild(grid);

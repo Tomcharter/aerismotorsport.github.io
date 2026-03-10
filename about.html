@@ -45,7 +45,7 @@
       const siteData = await fetchJSON('data/site.json') || FALLBACK_ABOUT;
       const data = (siteData.aboutParagraphs) ? siteData : FALLBACK_ABOUT;
 
-      let html = '<h2>About Us</h2>';
+      let html = '';
       data.aboutParagraphs.forEach(p => {
         const text = escapeHTML(p).replace(
           /&quot;results&quot; tab/g,
@@ -55,17 +55,9 @@
       });
 
       if (data.aboutMission) {
-        html += `<div class="highlight-box"><p>${escapeHTML(data.aboutMission)}</p></div>`;
+        html += `<p>${escapeHTML(data.aboutMission)}</p>`;
       }
 
-      html += `
-        <h2>Meet the Team</h2>
-        <p>Get to know the drivers behind the wheel.</p>
-        <div class="contact-links">
-          <a href="drivers.html" class="btn btn-primary">Meet the Drivers</a>
-          <a href="results.html" class="btn btn-outline">View Results</a>
-        </div>
-      `;
       container.innerHTML = html;
     });
   </script>

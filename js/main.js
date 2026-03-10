@@ -41,7 +41,6 @@ function buildNav() {
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
         <img src="images/logo.png" alt="Aeris Motorsport Logo">
-        <span>Aeris</span>
       </a>
       <button class="nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -102,6 +101,8 @@ function buildFooter() {
         <a href="about.html">About</a>
         <a href="drivers.html">Drivers</a>
         <a href="results.html">Results</a>
+        <a href="championships.html">Championships</a>
+        <a href="gallery.html">Gallery</a>
       </div>
       <div class="footer-bottom">
         <p>&copy; ${year} Aeris Motorsport. All rights reserved. &bull; Powered by <a href="https://www.iracing.com" target="_blank" rel="noopener noreferrer">iRacing</a></p>

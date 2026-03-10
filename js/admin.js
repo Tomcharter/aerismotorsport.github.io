@@ -49,7 +49,15 @@ let driversData = [];
 let resultsData = [];
 let championshipsData = { current: [], won: [] };
 let galleryData = [];
-let siteData = { heroImages: [{url:'',alt:''},{url:'',alt:''},{url:'',alt:''}], aboutParagraphs: ['',''], aboutMission: '' };
+const SITE_DEFAULTS = {
+  heroImages: [{url:'',alt:''},{url:'',alt:''},{url:'',alt:''}],
+  aboutParagraphs: [
+    "Aeris Motorsport are a close-knit group of friends competing together in endurance events in iRacing. In 2024 we joined forces and have since been achieving results in championships primarily in GT3 machinery. The series we compete in include the Nurburgring Endurance Championship, Global Endurance Tour, GT Endurance Championship and special events.",
+    "Spending time competing on iRacing is a big hobby of ours, and the key to our team is spending multiple weeks planning, lapping, strategizing, comparing telemetry, all the way up to the race weekend. We are not a professional team in the financial sense, and we\u2019re okay keeping it that way, however we find the most enjoyment from this sim title by maximising our chances of being successful on the virtual track. We are proud of the results and championships we\u2019ve earned so far. Check our \"results\" tab for more information."
+  ],
+  aboutMission: "Our mission is to continue to build our successful team together as a unit. We lose and win these races and championships together."
+};
+let siteData = JSON.parse(JSON.stringify(SITE_DEFAULTS));
 let isDirty = false;
 
 // --- Tab Switching ---
@@ -120,7 +128,7 @@ function renderDrivers() {
 }
 
 function driverForm(driver, onSave, onCancel) {
-  const d = driver || { name: '', role: '', irating: '', favouriteCar: '', favouriteTrack: '', bio: '', photo: '' };
+  const d = driver || { name: '', role: '', irating: '', favouriteCar: '', favouriteTrack: '', bio: '', photo: '', initials: '' };
   return `
     <div class="admin-form card">
       <h4>${driver ? 'Edit Driver' : 'Add New Driver'}</h4>
@@ -147,7 +155,14 @@ function driverForm(driver, onSave, onCancel) {
         </div>
         <div class="form-group">
           <label>Photo URL</label>
-          <input type="text" id="df-photo" value="${escapeHTML(d.photo || '')}" placeholder="Optional">
+          <div style="display:flex;gap:0.5rem;">
+            <input type="text" id="df-photo" value="${escapeHTML(d.photo || '')}" placeholder="URL or upload" style="flex:1;">
+            <button class="btn-sm btn-edit" type="button" onclick="pickImage('df-photo')">Upload</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Initials (no photo)</label>
+          <input type="text" id="df-initials" value="${escapeHTML(d.initials || '')}" placeholder="Auto from name" maxlength="4">
         </div>
         <div class="form-group form-full">
           <label>Bio</label>
@@ -184,7 +199,8 @@ function saveNewDriver() {
     bio: document.getElementById('df-bio').value.trim(),
     favouriteCar: document.getElementById('df-car').value.trim(),
     favouriteTrack: document.getElementById('df-track').value.trim(),
-    photo: document.getElementById('df-photo').value.trim()
+    photo: document.getElementById('df-photo').value.trim(),
+    initials: document.getElementById('df-initials').value.trim()
   });
   cancelDriverForm();
   renderDrivers();
@@ -209,7 +225,8 @@ function saveEditDriver(index) {
     bio: document.getElementById('df-bio').value.trim(),
     favouriteCar: document.getElementById('df-car').value.trim(),
     favouriteTrack: document.getElementById('df-track').value.trim(),
-    photo: document.getElementById('df-photo').value.trim()
+    photo: document.getElementById('df-photo').value.trim(),
+    initials: document.getElementById('df-initials').value.trim()
   };
   cancelDriverForm();
   renderDrivers();
@@ -267,7 +284,8 @@ function resultForm(result, onSave, onCancel) {
   const images = Array.isArray(r.images) ? r.images : [];
   const imageRowsHTML = images.map((url, i) => `
     <div class="image-row">
-      <input type="text" class="rf-image-url" value="${escapeHTML(url)}" placeholder="https://example.com/image.jpg">
+      <input type="text" class="rf-image-url" value="${escapeHTML(url)}" placeholder="URL or upload">
+      <button class="btn-sm btn-edit" type="button" onclick="pickImageForInput(this)">Upload</button>
       <button class="btn-sm btn-delete" type="button" onclick="this.parentElement.remove()">Remove</button>
     </div>
   `).join('');
@@ -330,7 +348,8 @@ function addResultImageRow() {
   const row = document.createElement('div');
   row.className = 'image-row';
   row.innerHTML = `
-    <input type="text" class="rf-image-url" placeholder="https://example.com/image.jpg">
+    <input type="text" class="rf-image-url" placeholder="URL or upload">
+    <button class="btn-sm btn-edit" type="button" onclick="pickImageForInput(this)">Upload</button>
     <button class="btn-sm btn-delete" type="button" onclick="this.parentElement.remove()">Remove</button>
   `;
   list.appendChild(row);
@@ -706,7 +725,10 @@ function galleryForm(item, onSave, onCancel) {
         </div>
         <div class="form-group">
           <label>Image URL</label>
-          <input type="text" id="gf-image" value="${escapeHTML(g.image || '')}" placeholder="https://example.com/image.jpg">
+          <div style="display:flex;gap:0.5rem;">
+            <input type="text" id="gf-image" value="${escapeHTML(g.image || '')}" placeholder="URL or upload" style="flex:1;">
+            <button class="btn-sm btn-edit" type="button" onclick="pickImage('gf-image')">Upload</button>
+          </div>
         </div>
         <div class="form-group">
           <label>Placeholder Color</label>
@@ -887,6 +909,162 @@ async function loadAdminData() {
 }
 
 // =============================================
+//  IMAGE UPLOAD HELPERS
+// =============================================
+
+const IMG_MAX_WIDTH = 1920;
+const IMG_MAX_HEIGHT = 1080;
+const IMG_QUALITY = 0.85;
+
+function resizeImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+
+      // Only downscale, never upscale
+      if (width > IMG_MAX_WIDTH || height > IMG_MAX_HEIGHT) {
+        const ratio = Math.min(IMG_MAX_WIDTH / width, IMG_MAX_HEIGHT / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Use JPEG for photos (smaller), keep PNG if the original was PNG with transparency
+      const isPng = file.type === 'image/png';
+      const mimeType = isPng ? 'image/png' : 'image/jpeg';
+      const quality = isPng ? undefined : IMG_QUALITY;
+      resolve(canvas.toDataURL(mimeType, quality));
+    };
+    img.src = url;
+  });
+}
+
+function pickImage(targetInputId) {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const target = document.getElementById(targetInputId);
+    if (target) {
+      target.value = 'Resizing...';
+      target.value = await resizeImage(file);
+    }
+  });
+  fileInput.click();
+}
+
+// For image rows that don't have a fixed ID (result images)
+function pickImageForInput(btn) {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const urlInput = btn.parentElement.querySelector('input[type="text"]');
+    if (urlInput) {
+      urlInput.value = 'Resizing...';
+      urlInput.value = await resizeImage(file);
+    }
+  });
+  fileInput.click();
+}
+
+function generateUploadPath(prefix) {
+  const timestamp = Date.now();
+  const rand = Math.random().toString(36).substring(2, 8);
+  return `images/uploads/${prefix}-${timestamp}-${rand}`;
+}
+
+async function pushImageFile(token, repoPath, base64Data) {
+  // base64Data is a data URI like "data:image/png;base64,iVBOR..."
+  const match = base64Data.match(/^data:image\/(\w+);base64,(.+)$/);
+  if (!match) throw new Error('Invalid image data');
+  const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+  const rawBase64 = match[2];
+  const fullPath = repoPath + '.' + ext;
+
+  const getRes = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${fullPath}`, {
+    headers: { 'Authorization': `token ${token}` }
+  });
+  let sha = null;
+  if (getRes.ok) {
+    sha = (await getRes.json()).sha;
+  }
+
+  const body = {
+    message: `Upload ${fullPath} via admin panel`,
+    content: rawBase64,
+  };
+  if (sha) body.sha = sha;
+
+  const putRes = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${fullPath}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.json();
+    throw new Error(err.message || `Failed to upload ${fullPath}`);
+  }
+
+  return fullPath;
+}
+
+// Scan all data for data URIs, upload them, and replace with real URLs
+async function uploadPendingImages(token, statusFn) {
+  const GH_PAGES_BASE = '';  // relative URLs work on same domain
+
+  async function processUrl(url, prefix) {
+    if (!url || !url.startsWith('data:image/')) return url;
+    const repoPath = generateUploadPath(prefix);
+    statusFn(`Uploading image...`);
+    const fullPath = await pushImageFile(token, repoPath, url);
+    return fullPath;
+  }
+
+  // Drivers
+  for (let i = 0; i < driversData.length; i++) {
+    driversData[i].photo = await processUrl(driversData[i].photo, 'driver');
+  }
+
+  // Results
+  for (let i = 0; i < resultsData.length; i++) {
+    if (Array.isArray(resultsData[i].images)) {
+      for (let j = 0; j < resultsData[i].images.length; j++) {
+        resultsData[i].images[j] = await processUrl(resultsData[i].images[j], 'result');
+      }
+    }
+  }
+
+  // Gallery
+  for (let i = 0; i < galleryData.length; i++) {
+    galleryData[i].image = await processUrl(galleryData[i].image, 'gallery');
+  }
+
+  // Site hero images
+  if (siteData.heroImages) {
+    for (let i = 0; i < siteData.heroImages.length; i++) {
+      siteData.heroImages[i].url = await processUrl(siteData.heroImages[i].url, 'hero');
+    }
+  }
+}
+
+// =============================================
 //  PUBLISH — GitHub API
 // =============================================
 
@@ -1002,6 +1180,17 @@ async function publishAll() {
 
   const btn = document.getElementById('publish-btn');
   btn.disabled = true;
+
+  // Upload any images selected from file picker before publishing JSON
+  try {
+    btn.textContent = 'Uploading images...';
+    await uploadPendingImages(token, (msg) => showStatus(msg, 'info'));
+  } catch (err) {
+    showStatus('Image upload failed: ' + err.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Publish Changes';
+    return;
+  }
 
   const files = [
     { path: 'data/drivers.json', data: driversData, label: 'drivers' },

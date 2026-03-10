@@ -93,12 +93,15 @@
         <!-- Site Content Tab -->
         <div class="admin-panel" id="panel-site" role="tabpanel">
           <h3 class="mt-4">Homepage Hero Images</h3>
-          <p class="text-secondary" style="margin-bottom:1rem;">Three images displayed at the bottom of the homepage. Use image URLs (e.g. from Discord, Imgur, or your own hosting).</p>
+          <p class="text-secondary" style="margin-bottom:1rem;">Three images displayed at the bottom of the homepage. Use image URLs or upload from your computer.</p>
           <div class="admin-form card" id="hero-images-form">
             <div class="form-grid">
               <div class="form-group">
                 <label>Image 1 — URL</label>
-                <input type="text" id="si-hero1-url" placeholder="https://example.com/car1.jpg">
+                <div style="display:flex;gap:0.5rem;">
+                  <input type="text" id="si-hero1-url" placeholder="URL or upload" style="flex:1;">
+                  <button class="btn-sm btn-edit" type="button" onclick="pickImage('si-hero1-url')">Upload</button>
+                </div>
               </div>
               <div class="form-group">
                 <label>Image 1 — Alt Text</label>
@@ -106,7 +109,10 @@
               </div>
               <div class="form-group">
                 <label>Image 2 — URL</label>
-                <input type="text" id="si-hero2-url" placeholder="https://example.com/car2.jpg">
+                <div style="display:flex;gap:0.5rem;">
+                  <input type="text" id="si-hero2-url" placeholder="URL or upload" style="flex:1;">
+                  <button class="btn-sm btn-edit" type="button" onclick="pickImage('si-hero2-url')">Upload</button>
+                </div>
               </div>
               <div class="form-group">
                 <label>Image 2 — Alt Text</label>
@@ -114,7 +120,10 @@
               </div>
               <div class="form-group">
                 <label>Image 3 — URL</label>
-                <input type="text" id="si-hero3-url" placeholder="https://example.com/car3.jpg">
+                <div style="display:flex;gap:0.5rem;">
+                  <input type="text" id="si-hero3-url" placeholder="URL or upload" style="flex:1;">
+                  <button class="btn-sm btn-edit" type="button" onclick="pickImage('si-hero3-url')">Upload</button>
+                </div>
               </div>
               <div class="form-group">
                 <label>Image 3 — Alt Text</label>

@@ -44,7 +44,7 @@
       }
 
       grid.innerHTML = drivers.map(d => {
-        const initials = d.name.split(' ').map(n => n[0]).join('');
+        const initials = d.initials || d.name.split(' ').map(n => n[0]).join('');
         const photoHTML = d.photo
           ? `<img src="${escapeHTML(d.photo)}" alt="${escapeHTML(d.name)}" loading="lazy">`
           : escapeHTML(initials);

@@ -9,5 +9,16 @@
     "favouriteTrack": "Jerez",
     "photo": "",
     "initials": "PC"
+  },
+  {
+    "id": "driver-thomas-charter",
+    "name": "Thomas Charter",
+    "role": "Driver",
+    "irating": "2.2k",
+    "bio": "",
+    "favouriteCar": "Porsche 911 GT3R",
+    "favouriteTrack": "Brands Hatch",
+    "photo": "",
+    "initials": "TC"
   }
 ]

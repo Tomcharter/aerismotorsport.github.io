@@ -153,7 +153,7 @@ function driverForm(driver, onSave, onCancel) {
           <label>Favourite Track</label>
           <input type="text" id="df-track" value="${escapeHTML(d.favouriteTrack || '')}">
         </div>
-        <div class="form-group">
+        <div class="form-group form-full">
           <label>Photo URL</label>
           <div style="display:flex;gap:0.5rem;">
             <input type="text" id="df-photo" value="${escapeHTML(d.photo || '')}" placeholder="URL or upload" style="flex:1;">

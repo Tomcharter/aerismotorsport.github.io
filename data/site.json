@@ -1,8 +1,17 @@
 {
   "heroImages": [
-    { "url": "", "alt": "GT3 car livery" },
-    { "url": "", "alt": "GT3 car livery" },
-    { "url": "", "alt": "GT3 car livery" }
+    {
+      "url": "",
+      "alt": "GT3 car livery"
+    },
+    {
+      "url": "",
+      "alt": "GT3 car livery"
+    },
+    {
+      "url": "",
+      "alt": "GT3 car livery"
+    }
   ],
   "aboutParagraphs": [
     "Aeris Motorsport are a close-knit group of friends competing together in endurance events in iRacing. In 2024 we joined forces and have since been achieving results in championships primarily in GT3 machinery. The series we compete in include the Nurburgring Endurance Championship, Global Endurance Tour, GT Endurance Championship and special events.",

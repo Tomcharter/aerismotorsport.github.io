@@ -55,6 +55,15 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input, textarea, select, [contenteditable="true"] {
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 img {
@@ -210,7 +219,7 @@ main {
   flex-direction: column;
   gap: 5px;
   padding: 0.5rem;
-  z-index: 1001;
+  z-index: 1002;
 }
 
 .nav-toggle span {
@@ -611,6 +620,13 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .drivers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 }
 
 .driver-card {

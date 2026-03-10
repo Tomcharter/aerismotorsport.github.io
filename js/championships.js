@@ -5,10 +5,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await fetchJSON('data/championships.json');
   const currentContainer = document.getElementById('current-championships');
+  const pastContainer = document.getElementById('past-seasons');
   const trophyContainer = document.getElementById('trophy-cabinet');
 
   if (!data) {
     currentContainer.innerHTML =
+      '<p class="text-secondary">Could not load championship data.</p>';
+    pastContainer.innerHTML =
       '<p class="text-secondary">Could not load championship data.</p>';
     trophyContainer.innerHTML =
       '<p class="text-secondary">Could not load championship data.</p>';
@@ -38,6 +41,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   } else {
     currentContainer.querySelector('p').textContent = 'No active championship campaigns.';
+  }
+
+  // Past seasons
+  if (data.past && data.past.length > 0) {
+    const header = pastContainer.querySelector('.section-header');
+    pastContainer.innerHTML = '';
+    pastContainer.appendChild(header);
+
+    data.past.forEach(champ => {
+      const section = document.createElement('div');
+      section.className = 'championship-card';
+      section.innerHTML = `
+        <div class="card">
+          <h3>${escapeHTML(champ.season)}</h3>
+          <p class="series-name">${escapeHTML(champ.series)}${champ.split ? ' — ' + escapeHTML(champ.split) : ''}</p>
+          <div class="championship-standing">
+            <span class="position-badge ${champ.position <= 3 ? 'top3' : 'top10'}">P${parseInt(champ.position, 10)}</span>
+            <span class="championship-points">${parseInt(champ.finalPoints, 10)} points</span>
+          </div>
+        </div>
+      `;
+      pastContainer.appendChild(section);
+    });
+  } else {
+    pastContainer.querySelector('p').textContent = 'No past season data yet.';
   }
 
   // Trophy cabinet

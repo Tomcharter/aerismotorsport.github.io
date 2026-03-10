@@ -47,7 +47,7 @@ if (sessionStorage.getItem('admin-auth') === '1') {
 // --- State ---
 let driversData = [];
 let resultsData = [];
-let championshipsData = { current: [], won: [] };
+let championshipsData = { current: [], past: [], won: [] };
 let galleryData = [];
 const SITE_DEFAULTS = {
   heroImages: [{url:'',alt:''},{url:'',alt:''},{url:'',alt:''}],
@@ -518,6 +518,7 @@ function renderCurrentChampionships() {
           <span class="text-secondary"> — ${escapeHTML(c.series)}</span>
         </div>
         <div class="admin-entry-actions">
+          <button class="btn-sm btn-edit" onclick="moveCurrentToPast(${i})" title="Move to Past Seasons">&#9654; Past</button>
           <button class="btn-sm btn-edit" onclick="editCurrentChampionship(${i})">Edit</button>
           <button class="btn-sm btn-delete" onclick="deleteCurrentChampionship(${i})">Delete</button>
         </div>
@@ -620,6 +621,145 @@ function deleteCurrentChampionship(index) {
   if (!confirm(`Delete "${c.season} — ${c.series}"?`)) return;
   championshipsData.current.splice(index, 1);
   renderCurrentChampionships();
+  saveAll();
+}
+
+function moveCurrentToPast(index) {
+  const c = championshipsData.current[index];
+  if (!confirm(`Move "${c.season} — ${c.series}" to Past Seasons?`)) return;
+  championshipsData.current.splice(index, 1);
+  championshipsData.past.push({
+    season: c.season,
+    series: c.series,
+    position: c.position,
+    finalPoints: c.points,
+    split: c.split
+  });
+  renderCurrentChampionships();
+  renderPastSeasons();
+  saveAll();
+}
+
+// =============================================
+//  CHAMPIONSHIPS — Past Seasons
+// =============================================
+
+function renderPastSeasons() {
+  const list = document.getElementById('past-list');
+  const past = championshipsData.past;
+  if (past.length === 0) {
+    list.innerHTML = '<p class="text-secondary" style="text-align:center;padding:2rem;">No past seasons recorded.</p>';
+    return;
+  }
+  list.innerHTML = past.map((p, i) => `
+    <div class="admin-entry card">
+      <div class="admin-entry-header">
+        <div>
+          <strong>${escapeHTML(p.season)}</strong>
+          <span class="text-secondary"> — ${escapeHTML(p.series)}</span>
+        </div>
+        <div class="admin-entry-actions">
+          <button class="btn-sm btn-edit" onclick="editPastSeason(${i})">Edit</button>
+          <button class="btn-sm btn-delete" onclick="deletePastSeason(${i})">Delete</button>
+        </div>
+      </div>
+      <div class="admin-entry-details">
+        <span>Position: <strong class="text-accent">P${p.position}</strong></span>
+        <span>Points: ${p.finalPoints}</span>
+        ${p.split ? `<span>Split: ${escapeHTML(p.split)}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function pastSeasonForm(ps, onSave, onCancel) {
+  const p = ps || { season: '', series: '', position: '', finalPoints: '', split: '' };
+  return `
+    <div class="admin-form card">
+      <h4>${ps ? 'Edit Past Season' : 'Add Past Season'}</h4>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Season *</label>
+          <input type="text" id="pf-season" value="${escapeHTML(p.season)}" placeholder="e.g. 2025 S2">
+        </div>
+        <div class="form-group">
+          <label>Series *</label>
+          <input type="text" id="pf-series" value="${escapeHTML(p.series)}">
+        </div>
+        <div class="form-group">
+          <label>Team Position *</label>
+          <input type="number" id="pf-position" min="1" value="${p.position}">
+        </div>
+        <div class="form-group">
+          <label>Final Points</label>
+          <input type="number" id="pf-points" value="${p.finalPoints}" min="0">
+        </div>
+        <div class="form-group">
+          <label>Split</label>
+          <input type="text" id="pf-split" value="${escapeHTML(p.split || '')}" placeholder="Optional, e.g. Top Split">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="${onSave}">Save</button>
+        <button class="btn btn-outline" onclick="${onCancel}">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+function addPastSeason() {
+  const area = document.getElementById('past-form-area');
+  area.innerHTML = pastSeasonForm(null, 'saveNewPastSeason()', 'cancelPastSeasonForm()');
+  area.scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelPastSeasonForm() {
+  document.getElementById('past-form-area').innerHTML = '';
+}
+
+function saveNewPastSeason() {
+  const season = document.getElementById('pf-season').value.trim();
+  const series = document.getElementById('pf-series').value.trim();
+  const position = parseInt(document.getElementById('pf-position').value, 10);
+  if (!season || !series || !position) { alert('Season, Series, and Position are required.'); return; }
+  championshipsData.past.push({
+    season, series,
+    position,
+    finalPoints: parseInt(document.getElementById('pf-points').value, 10) || 0,
+    split: document.getElementById('pf-split').value.trim()
+  });
+  cancelPastSeasonForm();
+  renderPastSeasons();
+  saveAll();
+}
+
+function editPastSeason(index) {
+  const area = document.getElementById('past-form-area');
+  area.innerHTML = pastSeasonForm(championshipsData.past[index], `saveEditPastSeason(${index})`, 'cancelPastSeasonForm()');
+  area.scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveEditPastSeason(index) {
+  const season = document.getElementById('pf-season').value.trim();
+  const series = document.getElementById('pf-series').value.trim();
+  const position = parseInt(document.getElementById('pf-position').value, 10);
+  if (!season || !series || !position) { alert('Season, Series, and Position are required.'); return; }
+  championshipsData.past[index] = {
+    season, series,
+    position,
+    finalPoints: parseInt(document.getElementById('pf-points').value, 10) || 0,
+    split: document.getElementById('pf-split').value.trim()
+  };
+  cancelPastSeasonForm();
+  renderPastSeasons();
+  saveAll();
+}
+
+function deletePastSeason(index) {
+  const p = championshipsData.past[index];
+  if (!confirm(`Delete "${p.season} — ${p.series}"?`)) return;
+  championshipsData.past.splice(index, 1);
+  renderPastSeasons();
   saveAll();
 }
 
@@ -927,7 +1067,7 @@ async function loadAdminData() {
     try {
       driversData = JSON.parse(localStorage.getItem('admin-drivers')) || [];
       resultsData = JSON.parse(localStorage.getItem('admin-results')) || [];
-      championshipsData = JSON.parse(localStorage.getItem('admin-championships')) || { current: [], won: [] };
+      championshipsData = JSON.parse(localStorage.getItem('admin-championships')) || { current: [], past: [], won: [] };
       galleryData = JSON.parse(localStorage.getItem('admin-gallery')) || [];
       const savedSite = localStorage.getItem('admin-site');
       if (savedSite) siteData = JSON.parse(savedSite);
@@ -957,6 +1097,7 @@ async function loadAdminData() {
     if (championships) {
       championshipsData = {
         current: championships.current || [],
+        past: championships.past || [],
         won: championships.won || []
       };
     }
@@ -968,6 +1109,7 @@ async function loadAdminData() {
   renderDrivers();
   renderResults();
   renderCurrentChampionships();
+  renderPastSeasons();
   renderPastWins();
   renderGalleryAdmin();
   renderSiteContent();
@@ -1236,6 +1378,7 @@ async function discardDrafts() {
   renderDrivers();
   renderResults();
   renderCurrentChampionships();
+  renderPastSeasons();
   renderPastWins();
   renderGalleryAdmin();
   renderSiteContent();

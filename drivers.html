@@ -46,7 +46,7 @@
       grid.innerHTML = drivers.map(d => {
         const initials = d.initials || d.name.split(' ').map(n => n[0]).join('');
         const photoHTML = d.photo
-          ? `<img src="${escapeHTML(d.photo)}" alt="${escapeHTML(d.name)}" loading="lazy">`
+          ? `<img src="${escapeHTML(d.photo)}" alt="${escapeHTML(d.name)}" loading="lazy" onerror="this.parentElement.textContent='${escapeHTML(initials)}';this.remove();">`
           : escapeHTML(initials);
 
         return `

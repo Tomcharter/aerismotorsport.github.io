@@ -322,8 +322,11 @@ function resultForm(result, onSave, onCancel) {
           <input type="number" id="rf-finishpos" min="1" value="${r.finishPos}">
         </div>
         <div class="form-group">
-          <label>Drivers (comma-separated)</label>
-          <input type="text" id="rf-drivers" value="${escapeHTML(driversStr)}" placeholder="Alex Morgan, Sarah Chen">
+          <label>Drivers</label>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" id="rf-drivers" value="${escapeHTML(driversStr)}" placeholder="Select or type driver names" style="flex:1;" readonly>
+            <button class="btn-sm btn-edit" type="button" onclick="openDriverPicker()">Select</button>
+          </div>
         </div>
         <div class="form-group form-full">
           <label>Notes</label>
@@ -353,6 +356,60 @@ function addResultImageRow() {
     <button class="btn-sm btn-delete" type="button" onclick="this.parentElement.remove()">Remove</button>
   `;
   list.appendChild(row);
+}
+
+function openDriverPicker() {
+  const currentDrivers = document.getElementById('rf-drivers').value
+    .split(',').map(s => s.trim()).filter(Boolean);
+
+  // Build modal overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'driver-picker-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;padding:1.5rem;';
+
+  const driverList = driversData.length > 0
+    ? driversData.map(d => {
+        const checked = currentDrivers.includes(d.name) ? 'checked' : '';
+        return `
+          <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:var(--radius-sm);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--color-surface-light)'" onmouseout="this.style.background='transparent'">
+            <input type="checkbox" class="dp-checkbox" value="${escapeHTML(d.name)}" ${checked} style="width:18px;height:18px;accent-color:var(--color-accent);">
+            <span>${escapeHTML(d.name)}</span>
+            <span class="text-secondary" style="font-size:0.8rem;margin-left:auto;">${escapeHTML(d.role || '')}</span>
+          </label>`;
+      }).join('')
+    : '<p class="text-secondary" style="padding:1rem;">No drivers added yet. Add drivers in the Drivers tab first.</p>';
+
+  overlay.innerHTML = `
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:420px;max-height:80vh;display:flex;flex-direction:column;">
+      <h4 style="margin-bottom:1rem;color:var(--color-accent);">Select Drivers</h4>
+      <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.25rem;margin-bottom:1rem;">
+        ${driverList}
+      </div>
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="closeDriverPicker()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmDriverPicker()">Confirm</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // Close on overlay background click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeDriverPicker();
+  });
+}
+
+function closeDriverPicker() {
+  const overlay = document.getElementById('driver-picker-overlay');
+  if (overlay) overlay.remove();
+}
+
+function confirmDriverPicker() {
+  const checkboxes = document.querySelectorAll('#driver-picker-overlay .dp-checkbox:checked');
+  const selected = Array.from(checkboxes).map(cb => cb.value);
+  document.getElementById('rf-drivers').value = selected.join(', ');
+  closeDriverPicker();
 }
 
 function addResult() {
